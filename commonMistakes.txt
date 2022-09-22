@@ -1,0 +1,449 @@
+Common Mistakes | Cheat Sheet
+Concepts in Focus
+•	Missing Export Statement
+•	Missing Import Statement
+•	Missing Extending the React Component Class
+•	class vs className
+•	onclick vs onClick
+•	Event Listeners inside Class Component
+•	Passing Event Handler
+•	Modifying the State Directly
+•	Calling setState()from render()
+
+•	Invoking Event HandlersetState()is Asynchronous
+•	React Component should return a single JSX element
+o	Fragments
+•	Props are Read-only
+1. Missing Export Statement
+Mistake:
+File: src/App.js
+JSX Code:
+
+import Counter from './components/Counter'
+
+const App = () => {
+  return <Counter />
+}
+
+export default App
+
+File: src/components/Counter/index.js
+
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  render() {
+    return (
+      <p className="counter">Counter</p>
+    )
+  }
+}
+
+
+2. Missing Import Statement
+Mistake:
+File: src/App.js
+JSX CODE:
+
+const App = () => {
+  return <Counter />
+}
+
+export default App
+
+File: src/components/Counter/index.js
+
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  render() {
+    return (
+      <p className="counter">Counter</p>
+    )
+  }
+}
+
+export default Counter
+
+
+3. Missing Extending the React Component Class
+Mistake:
+File: src/App.js
+JSX CODE:
+
+import Counter from './components/Counter'
+
+const App = () => {
+  return <Counter />
+}
+
+export default App
+
+
+File: src/components/Counter/index.js
+
+JSX CODE:
+
+import './index.css'
+
+class Counter {
+  render() {
+    return (
+      <p className="counter">Counter</p>
+    )
+  }
+}
+
+
+
+4. class vs className
+Mistake:
+File: src/components/Counter/index.js
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  render() {
+    return (
+      <p class="counter">Counter</p>
+    )
+  }
+}
+
+export default Counter
+
+
+
+5. onclick vs onClick
+Mistake:
+File: src/components/Counter/index.js
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  onIncrement = () => {
+    console.log("on increment called")
+  }
+  render() {
+    return (
+      <p className="counter">Counter</p>
+      <button onclick={this.onIncrement}>Increase</button>
+    )
+  }
+}
+
+export default Counter
+
+
+6. Event Listeners inside Class Component
+Mistake:
+File: src/components/Counter/index.js
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  state = { count: 0 }
+  onIncrement() {
+    const {count} = this.state
+    console.log(count)
+  }
+  render() {
+    return (
+      <p className="counter">Counter</p>
+      <button onClick={this.onIncrement}>Increase</button>
+    )
+  }
+}
+
+export default Counter
+
+Solution:
+JS CODE:
+
+onIncrement = () => {
+  const {count} = this.state;
+  console.log(count);
+};
+
+
+In Arrow functions, this refers to the context in which the code is defined.
+7. Passing Event Handler
+Mistake:
+File: src/components/Counter/index.js
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  state = {count: 0}
+  onIncrement = () => {
+    this.setState(prevState => ({
+      count: prevState.count + 1
+    }))
+  }
+  render() {
+    return <button onClick={onIncrement}>Increase</button> 
+  }
+}
+
+export default Counter
+
+
+Solution:
+
+JSX CODE:
+
+<button onClick={this.onIncrement}>Increase</button>
+
+
+8. Modifying the State Directly
+Modifying the state directly won't trigger the render() method.
+Mistake:
+JS CODE:
+onIncrement = () => {
+  this.state.count = this.state.count + 1;
+};
+
+Solution:
+JS CODE:
+
+onIncrement = () => {
+  this.setState(prevState => ({
+    count: prevState.count + 1
+  }));
+};
+
+Updating Object
+Mistake:
+
+JS CODE:
+
+state = {
+  person: {name: "Rahul", age: 30}
+}
+
+onUpdateAge = () => {
+  const {person} = this.state
+  person.age = 29
+}
+
+Solution:
+
+JSX CODE:
+
+state = {
+  person: {name: "Rahul", age: 30}
+}
+
+onUpdateAge = () => {
+  const {person} = this.state
+  const newPerson = {...person, age: 29}
+  this.setState({person: newPerson})
+}
+
+
+Updating List
+Mistake:
+JSX CODE:
+
+state = { numbers: [1, 2, 3] }
+
+onUpdateNumbers = () => {
+  const {numbers} = this.state
+  numbers.push(4)
+}
+
+Solution:
+ JSX CODE:
+
+state = {numbers: [1, 2, 3]}
+
+onUpdateNumbers = () => {
+  const {numbers} = this.state
+  const updatedNumbers = [...numbers, 4]
+  this.setState({numbers: updatedNumbers})
+}
+
+
+9. Calling setState()from render()
+Mistake:
+JSX CODE:
+
+render() {
+  this.setState({ count: 0 })
+  return ({...})
+}
+
+Specifying a new state with setState() function causes a new render. If we call setState from the render() function, this will cause an infinite loop.
+When we call setState from the  render() function, it will cause an infinite loop.
+10. Invoking Event Handler
+Mistake:
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  state = {count: 0}
+  onIncrement = () => {
+    this.setState(prevState => ({
+      count: prevState.count + 1
+    }))
+  }
+  render() {
+    return (
+      <p className="counter">Counter</p>
+      <button onClick={this.onIncrement()}>Increase</button>
+    )
+  }
+}
+
+export default Counter
+
+
+Soution:
+
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  state = {count: 0}
+  onIncrement = () => {
+    this.setState(prevState => ({
+      count: prevState.count + 1
+    }))
+  }
+  render() {
+    return (
+      <p className="counter">Counter</p>
+      <button onClick={this.onIncrement}>Increase</button>
+    )
+  }
+}
+
+export default Counter
+11. setState() is Asynchronous
+setState() does not update state immediately.
+Mistake:
+JSX CODE:
+
+import { Component } from 'react'
+
+import './index.css'
+
+class Counter extends Component {
+  state = {count: 0}
+  onIncrement = () => {
+    const {count} = this.state;
+    this.setState(prevState => ({
+      count: prevState.count + 1
+    }))
+    console.log(count)
+  }
+  render() {
+    return (
+      <p className="counter">Counter</p>
+      <button onClick={this.onIncrement}>Increase</button>
+    )
+  }
+}
+
+export default Counter
+
+
+12. React Component should return a single JSX element
+Mistake:
+JSX CODE:
+
+const Welcome = () => (
+  <h1>Hello, User</h1>
+  <p>You are learning React</p>
+)
+
+export default Welcome
+
+Solution:
+
+JSX CODE:
+
+import Welcome from'./components/Welcome'
+const App = () => <Welcome />
+export default App
+
+
+12.1 Fragments
+The fragment is an alternate way to return a single JSX element. It groups a list of children without adding extra nodes to the DOM.
+JSX CODE:
+
+import {Fragment} from 'react'
+
+const Welcome = () => (
+  <Fragment>
+    <h1>Hello, User</h1>
+    <p>You are learning React</p>
+  </Fragment>
+)
+
+export default Welcome
+
+Short Syntax:
+
+JSX CODE:
+
+const Welcome = () => (
+   <>
+     <h1>Hello, User</h1>
+     <p>You are learning React</p>
+   </>
+)
+
+export default Welcome
+
+13. Props are Read-only
+Mistake:
+File: src/App.js
+JSX CODE:
+
+import Welcome from './components/Welcome'
+const App = () => <Welcome name="Rahul" />
+export default App
+
+File: src/components/Welcome/index.js
+
+JSX CODE:
+
+const Welcome = props => {
+  props.name = 'Ramu'
+  const {name} = props
+  return (
+    <>
+      <h1>Hello, {name}</h1>
+      <p>You are learning React</p>
+    </>
+  )
+}
+
+export default Welcome
